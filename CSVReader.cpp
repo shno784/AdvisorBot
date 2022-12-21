@@ -8,10 +8,10 @@ CSVReader::CSVReader() {
 };
 
 //Load and read the CSV file
-std::vector<CSVData> CSVReader::readCSV(std::string filename) {
+std::vector<CSVData> CSVReader::readCSV() {
 	std::string timestamp;
 	//Read from file
-	std::ifstream csvFile(filename);
+	csvFile.open("C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv");
 	std::string line;
 
 	if (csvFile.is_open()) {
@@ -35,23 +35,24 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 std::vector<CSVData>  CSVReader::getLine(std::string time) {
 
 	//Read from file
-	std::ifstream csvFile("C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv");
+	std::ifstream csvFile{ "C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv" };
 	std::string line;
 
 	
+	
+
 		while (std::getline(csvFile, line)) {
 			try
 			{
-				
+
 				CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
-				std::cout << "CSVREADER TIME: " << csvd.timestamp << std::endl;
+				std::cout << "TIME IS: " << csvd.timestamp << std::endl;
 				if (csvd.timestamp == time) {
-					
 					data.push_back(csvd);
 				}
 				else {
 					a.clear();
-					a = csvd.timestamp;
+					a = csvd.timestamp;	
 					break;
 				}
 

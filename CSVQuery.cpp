@@ -10,7 +10,7 @@
 
 CSVQuery::CSVQuery(std::string filename) {
 
-	data = CSVReader::readCSV(filename);
+	data = CSVReader::readCSV();
 };
 
 std::vector<std::string> CSVQuery::tokenise(const std::string& csvLine, char separator) {
@@ -84,9 +84,8 @@ std::string CSVQuery::getEarliestTime()
 
 std::string CSVQuery::getNextTime(std::string timestamp)
 {	
-	CSVReader red;
 	std::string next_timestamp = "";
-	
+	CSVReader red;
 	CSVReader::getLine(red.a);
 	///*When the code reaches the last timestamp
 	//Go back to the first timestamp*/

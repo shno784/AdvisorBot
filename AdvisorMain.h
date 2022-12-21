@@ -39,6 +39,9 @@ private:
 	//Object based on the CSV file that will be used for querying
 	CSVQuery data{ "C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv" };
 
+
+
+
 	//String to hold the current time
 	std::string currentTime;
 
