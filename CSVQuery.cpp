@@ -83,26 +83,18 @@ std::string CSVQuery::getEarliestTime()
 };
 
 std::string CSVQuery::getNextTime(std::string timestamp)
-{
+{	
+	CSVReader red;
 	std::string next_timestamp = "";
-	//Traverse through the CSV file
-	for (const CSVData& d : data)
-	{
-		/*Check if the current timestamp is less than
-		The next timestamp*/
-		if (d.timestamp > timestamp)
-		{
-			next_timestamp = d.timestamp;
-			break;
-		}
+	
+	CSVReader::getLine(red.a);
+	///*When the code reaches the last timestamp
+	//Go back to the first timestamp*/
+	//if (next_timestamp == "")
+	//{
+	//	next_timestamp = data[0].timestamp;
+	//}
 
-	}
-	/*When the code reaches the last timestamp
-	Go back to the first timestamp*/
-	if (next_timestamp == "")
-	{
-		next_timestamp = data[0].timestamp;
-	}
 	return next_timestamp;
 };
 

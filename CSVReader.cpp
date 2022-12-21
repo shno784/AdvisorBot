@@ -9,31 +9,61 @@ CSVReader::CSVReader() {
 
 //Load and read the CSV file
 std::vector<CSVData> CSVReader::readCSV(std::string filename) {
-	std::vector<CSVData> data;
 	std::string timestamp;
 	//Read from file
-	std::ifstream csvFile{ filename };
+	std::ifstream csvFile(filename);
 	std::string line;
 
 	if (csvFile.is_open()) {
 
 		std::cout << "File open" << std::endl;
+		//Get the first line o the csv file
 		std::getline(csvFile, line);
-
-		std::vector<std::string> tokenisedLine = CSVQuery::tokenise(line, ',');
-		CSVData csvd = stringsToCSVD(tokenisedLine);
-		data.push_back(csvd);
-		
-		
+		CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
 		timestamp = csvd.timestamp;
-		std::cout << timestamp << std::endl;
+		getLine(timestamp);
+
 	}
 	else {
 		std::cout << "file not open" << std::endl;
 	}
+
 	
-	//Prints the number of entries in the file
-	std::cout << "The file has  " << data.size() << " entiries." << std::endl;
+	return data;
+};
+
+std::vector<CSVData>  CSVReader::getLine(std::string time) {
+
+	//Read from file
+	std::ifstream csvFile("C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv");
+	std::string line;
+
+	
+		while (std::getline(csvFile, line)) {
+			try
+			{
+				
+				CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
+				std::cout << "CSVREADER TIME: " << csvd.timestamp << std::endl;
+				if (csvd.timestamp == time) {
+					
+					data.push_back(csvd);
+				}
+				else {
+					a.clear();
+					a = csvd.timestamp;
+					break;
+				}
+
+			}
+			catch (const std::exception&)
+			{
+
+			}
+
+		}
+
+	std::cout << "File has " << data.size() << std::endl;
 
 	return data;
 };
@@ -47,6 +77,7 @@ CSVData CSVReader::stringsToCSVD(std::vector<std::string> tokens)
 		std::cout << "Bad line" << std::endl;
 		throw std::exception{};
 	}
+
 	//Try catch incase the price and amount aren't double
 	try
 	{
@@ -54,11 +85,11 @@ CSVData CSVReader::stringsToCSVD(std::vector<std::string> tokens)
 		price = std::stod(tokens[3]);
 		amount = std::stod(tokens[4]);
 	}
-	catch (const std::exception&)
+	catch (const std::exception)
 	{
 		std::cout << "Bad float! " << tokens[3] << std::endl;
 		std::cout << "Bad float! " << tokens[4] << std::endl;
-		throw;
+		throw std::exception{};
 	}
 
 	CSVData csvd{ price,

@@ -47,6 +47,11 @@ void AdvisorMain::init() {
 void AdvisorMain::help() {
     std::cout << "advisorbot> " << "The available commands are: " << std::endl;
     std::cout << "help\nhelp <cmd>\navg\nprod\nmin\nmax\npredict\ntime\nstep" << std::endl;
+    CSVReader dat;
+    /*for (auto d : dat.data) {
+        std::cout<<d
+    }*/
+    std::cout << "Size of data vector is: " << dat.data.size() << std::endl;
 };
 
 
