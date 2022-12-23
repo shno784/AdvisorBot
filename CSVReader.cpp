@@ -47,9 +47,11 @@ std::vector<CSVData>  CSVReader::getLine(std::string time) {
 
 	std::string line;
 	
-	if (csvFile.eof()) {
-		std::cout << "End of file!" << std::endl;
+	if (a == time) {
+		a = currentTime;
+		std::cout << "A is " << a << std::endl;
 	}
+	
 	while (std::getline(csvFile, line)) {
 		try
 		{
