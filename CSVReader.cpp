@@ -4,55 +4,60 @@
 
 
 CSVReader::CSVReader() {
-
-};
-
-//Load and read the CSV file
-std::vector<CSVData> CSVReader::readCSV() {
-	std::string timestamp;
-	//Read from file
 	csvFile.open("C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv");
-	std::string line;
 
 	if (csvFile.is_open()) {
-
 		std::cout << "File open" << std::endl;
-		//Get the first line o the csv file
-		std::getline(csvFile, line);
-		CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
-		timestamp = csvd.timestamp;
-		getLine(timestamp);
-
 	}
 	else {
 		std::cout << "file not open" << std::endl;
 	}
-
 	
+};
+
+//Load and read the CSV file
+std::vector<CSVData> CSVReader::readCSV() {
+
+	std::string timestamp;
+	//Read from file	
+	std::string line;
+	try
+	{
+		//Get the first line o the csv file
+		std::getline(csvFile, line);
+		CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
+		
+		timestamp = csvd.timestamp;
+		currentTime = timestamp;
+
+		data.push_back(csvd);
+
+		getLine(timestamp);
+	}
+	catch (const std::exception&)
+	{
+
+	}
+
 	return data;
 };
 
 std::vector<CSVData>  CSVReader::getLine(std::string time) {
 
-	//Read from file
-	std::ifstream csvFile{ "C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv" };
 	std::string line;
-
-	
-	
 
 		while (std::getline(csvFile, line)) {
 			try
 			{
-
 				CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
-				std::cout << "TIME IS: " << csvd.timestamp << std::endl;
+				std::cout<<"File timestamp " << csvd.timestamp << std::endl;
+
 				if (csvd.timestamp == time) {
 					data.push_back(csvd);
 				}
 				else {
-					a.clear();
-					a = csvd.timestamp;	
+					
+					a = csvd.timestamp;
 					break;
 				}
 

@@ -8,9 +8,9 @@
 #include <vector>
 
 
-CSVQuery::CSVQuery(std::string filename) {
-
-	data = CSVReader::readCSV();
+CSVQuery::CSVQuery() {
+	CSVReader data;
+	data.readCSV();
 };
 
 std::vector<std::string> CSVQuery::tokenise(const std::string& csvLine, char separator) {
@@ -79,22 +79,30 @@ std::vector<std::string> CSVQuery::getProducts(std::string product) {
 
 std::string CSVQuery::getEarliestTime()
 {
-	return data[0].timestamp;
+	CSVReader time;
+	std::string currentTime = time.currentTime;
+	
+	return currentTime;
 };
 
-std::string CSVQuery::getNextTime(std::string timestamp)
+std::string CSVQuery::getNextTime()
 {	
-	std::string next_timestamp = "";
-	CSVReader red;
-	CSVReader::getLine(red.a);
-	///*When the code reaches the last timestamp
-	//Go back to the first timestamp*/
-	//if (next_timestamp == "")
-	//{
-	//	next_timestamp = data[0].timestamp;
-	//}
+	CSVReader next;
 
-	return next_timestamp;
+	std::string nextTime;
+	try
+	{
+		nextTime = next.a;
+		
+
+	}
+	catch (const std::exception&)
+	{
+
+	}
+	next.getLine(nextTime);
+
+	return nextTime;
 };
 
 

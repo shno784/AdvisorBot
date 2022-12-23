@@ -228,7 +228,7 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
             total += data.totPrice(entries);
 
         }
-        currentTime = data.getNextTime(currentTime);
+        currentTime = data.getNextTime();
         
     }
     //If the entry is empty, it means the product wasn't found
@@ -248,9 +248,6 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
 };
 
 
-
-
-
 void AdvisorMain::predict() {
 
 };
@@ -263,7 +260,7 @@ void AdvisorMain::time() {
 
 void AdvisorMain::step() {
     //Sets next timestep
-    std::string nextTime = data.getNextTime(currentTime);
+    std::string nextTime = data.getNextTime();
  
     std::cout << "advisorbot> " << "Now at "<< nextTime << std::endl;
     //Converts the current time to the next time
