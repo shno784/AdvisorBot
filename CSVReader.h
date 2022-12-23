@@ -8,14 +8,15 @@
 class CSVReader {
 public:
 	CSVReader();
-	static std::vector<CSVData>  readCSV();
+	static std::vector<CSVData>  readCSV(std::string filename);
 	static std::vector<CSVData>  getLine(std::string time);
 	static inline std::string a;
 	static inline std::vector<CSVData> data;
 	static inline std::string currentTime;
+	static inline std::ifstream csvFile;
 
 private:
 	
 	static CSVData stringsToCSVD(std::vector<std::string> tokens);
-	static inline std::ifstream csvFile;
+	
 };

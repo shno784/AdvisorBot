@@ -8,9 +8,8 @@
 #include <vector>
 
 
-CSVQuery::CSVQuery() {
-	CSVReader data;
-	data.readCSV();
+CSVQuery::CSVQuery(std::string filename) {
+	data = CSVReader::readCSV(filename);
 };
 
 std::vector<std::string> CSVQuery::tokenise(const std::string& csvLine, char separator) {
@@ -56,9 +55,10 @@ std::vector<std::string> CSVQuery::getProducts(std::string product) {
 	std::vector<std::string> products;
 
 	std::map<std::string, bool> prodMap;
-
+	
 	//Find the products and put them in the Map
 	for (CSVData& d : data) {
+		
 		if (product == "all") {
 			prodMap[d.product] = true;
 		}
@@ -73,6 +73,7 @@ std::vector<std::string> CSVQuery::getProducts(std::string product) {
 	Which contains the products to a vector*/
 	for (auto const& d : prodMap) {
 		products.push_back(d.first);
+		
 	}
 	return products;
 };
@@ -93,15 +94,14 @@ std::string CSVQuery::getNextTime()
 	try
 	{
 		nextTime = next.a;
-		
+		CSVReader::getLine(nextTime);
 
 	}
 	catch (const std::exception&)
 	{
 
 	}
-	next.getLine(nextTime);
-
+	
 	return nextTime;
 };
 

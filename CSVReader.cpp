@@ -4,20 +4,21 @@
 
 
 CSVReader::CSVReader() {
-	csvFile.open("C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv");
 
-	if (csvFile.is_open()) {
-		std::cout << "File open" << std::endl;
-	}
-	else {
-		std::cout << "file not open" << std::endl;
-	}
 	
 };
 
 //Load and read the CSV file
-std::vector<CSVData> CSVReader::readCSV() {
+std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 
+	csvFile.open(filename);
+
+	if (csvFile.is_open()) {
+		std::cout << "File open 1 " << std::endl;
+	}
+	else {
+		std::cout << "file not open" << std::endl;
+	}
 	std::string timestamp;
 	//Read from file	
 	std::string line;
@@ -45,30 +46,32 @@ std::vector<CSVData> CSVReader::readCSV() {
 std::vector<CSVData>  CSVReader::getLine(std::string time) {
 
 	std::string line;
+	
+	if (csvFile.eof()) {
+		std::cout << "End of file!" << std::endl;
+	}
+	while (std::getline(csvFile, line)) {
+		try
+		{
+			CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
 
-		while (std::getline(csvFile, line)) {
-			try
-			{
-				CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
-				std::cout<<"File timestamp " << csvd.timestamp << std::endl;
-
-				if (csvd.timestamp == time) {
-					data.push_back(csvd);
-				}
-				else {
-					
-					a = csvd.timestamp;
-					break;
-				}
-
+			if (csvd.timestamp == time) {
+				data.push_back(csvd);
 			}
-			catch (const std::exception&)
-			{
+			else {
 
+				a = csvd.timestamp;
+				break;
 			}
 
 		}
+		catch (const std::exception&)
+		{
 
+		}
+
+	}
+	
 	std::cout << "File has " << data.size() << std::endl;
 
 	return data;

@@ -9,7 +9,7 @@ class CSVQuery
 {
 public:
 	//Construct that reads the csv file for querying
-	CSVQuery();
+	CSVQuery(std::string filename);
 
 	//splits up a string depending on the separator and returns a vector of strings
 	static std::vector<std::string> tokenise(const std::string&, char separator);
@@ -40,5 +40,6 @@ public:
 private:
 	//Vector based on the CSV file that will be used for querying
 	std::vector<CSVData> data;
+
 };
 

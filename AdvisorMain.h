@@ -37,7 +37,7 @@ private:
 	//Decides which function should be called based on user input 
 	void processUserOption(std::vector<std::string> input);
 	//Object based on the CSV file that will be used for querying
-	CSVQuery data{};
+	CSVQuery data{ "C:\\Users\\Joshua\\Downloads\\AdvisorBot-main\\AdvisorBot-main\\20200317.csv" };
 
 
 
