@@ -117,9 +117,9 @@ void AdvisorMain::min(std::string product, std::string csvType) {
     for (std::string const& p : data.getProducts(product)) {
         entries = data.getData(type, p, currentTime);
 
-        minPrice = CSVQuery::minPrice(entries);
+        
     }
-
+    minPrice = CSVQuery::minPrice(entries);
     //If the entry is empty, it means the product wasn't found
     if (entries.size() == 0) {
         std::cout << "advisorbot> " << "Product not found! " << std::endl;
@@ -162,9 +162,9 @@ void AdvisorMain::max(std::string product, std::string csvType) {
     for (std::string const& p : data.getProducts(product)) {
 
         entries = data.getData(type, p, currentTime);
-        maxPrice = CSVQuery::minPrice(entries);
+        
     }
-
+    maxPrice = CSVQuery::maxPrice(entries);
     //If the entry is empty, it means the product wasn't found
     if (entries.size() == 0) {
         std::cout << "advisorbot> " << "Product not found! " << std::endl;

@@ -41,5 +41,7 @@ private:
 	//Vector based on the CSV file that will be used for querying
 	std::vector<CSVData> data;
 
+	//Used for looping
+	static inline unsigned int i = 1;
 };
 

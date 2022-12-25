@@ -88,20 +88,24 @@ std::string CSVQuery::getEarliestTime()
 
 std::string CSVQuery::getNextTime()
 {	
-	CSVReader next;
-
+	CSVReader nextTimestep;
 	std::string nextTime;
 	try
 	{
-		nextTime = next.a;
-		CSVReader::getLine(nextTime);
-
+		CSVReader::getLine(nextTimestep.nextTimestep[i]);
+		//Assign the value of the next time to fetch other lines
+		nextTime = nextTimestep.nextTimestep[i];
+		
+		++i;
 	}
 	catch (const std::exception&)
 	{
 
 	}
-	
+	//If we have reached the end of our vector, go back to the start
+	if (i == nextTimestep.nextTimestep.size()) {
+		i = 0;
+	}
 	return nextTime;
 };
 

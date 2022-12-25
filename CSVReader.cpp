@@ -4,7 +4,6 @@
 
 
 CSVReader::CSVReader() {
-
 	
 };
 
@@ -14,12 +13,10 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 	csvFile.open(filename);
 
 	if (csvFile.is_open()) {
-		std::cout << "File open 1 " << std::endl;
+		std::cout << "File open1 " << std::endl;
 	}
-	else {
-		std::cout << "file not open" << std::endl;
-	}
-	std::string timestamp;
+
+
 	//Read from file	
 	std::string line;
 	try
@@ -27,19 +24,19 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 		//Get the first line o the csv file
 		std::getline(csvFile, line);
 		CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
-		
-		timestamp = csvd.timestamp;
-		currentTime = timestamp;
+
+		nextTimestep.push_back(csvd.timestamp);
+		currentTime = csvd.timestamp;
 
 		data.push_back(csvd);
 
-		getLine(timestamp);
+		getLine(csvd.timestamp);
 	}
 	catch (const std::exception&)
 	{
 
 	}
-
+	
 	return data;
 };
 
@@ -47,35 +44,37 @@ std::vector<CSVData>  CSVReader::getLine(std::string time) {
 
 	std::string line;
 	
-	if (a == time) {
-		a = currentTime;
-		std::cout << "A is " << a << std::endl;
-	}
-	
-	while (std::getline(csvFile, line)) {
-		try
-		{
-			CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
+	//If the File is good, run the code inside, if not close the file
+	if (csvFile.good()) {
+		//Get all lines
+		while (std::getline(csvFile, line)) {
+			try
+			{
+				CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
+				/*If the timestamp for the line being read is the same as the timestamp entered
+				push it back to the data vector*/
+				if (csvd.timestamp == time) {
+					data.push_back(csvd);
+				}
+				else {
+					//Grabs the first line that isn't equal to the time to store for later
+					nextTimestep.push_back(csvd.timestamp);
+					break;
+				}
 
-			if (csvd.timestamp == time) {
-				data.push_back(csvd);
 			}
-			else {
+			catch (const std::exception&)
+			{
 
-				a = csvd.timestamp;
-				break;
 			}
 
 		}
-		catch (const std::exception&)
-		{
-
-		}
-
 	}
-	
+	else {
+		csvFile.close();
+	}
+
 	std::cout << "File has " << data.size() << std::endl;
-
 	return data;
 };
 
