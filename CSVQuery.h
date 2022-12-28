@@ -36,12 +36,15 @@ public:
 	//returns the total price over set amount of timesteps
 	static double totPrice(std::vector<CSVData> data);
 
-
+	//Get time for step function
+	std::string getNextTimeStep(std::string time);
 private:
 	//Vector based on the CSV file that will be used for querying
 	std::vector<CSVData> data;
 
 	//Used for looping
 	static inline unsigned int i = 1;
+
+	
 };
 

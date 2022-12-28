@@ -87,15 +87,16 @@ std::string CSVQuery::getEarliestTime()
 };
 
 std::string CSVQuery::getNextTime()
-{	
+{	//Object of csvreader
 	CSVReader nextTimestep;
 	std::string nextTime;
+
 	try
 	{
 		CSVReader::getLine(nextTimestep.nextTimestep[i]);
 		//Assign the value of the next time to fetch other lines
 		nextTime = nextTimestep.nextTimestep[i];
-		
+
 		++i;
 	}
 	catch (const std::exception&)
@@ -106,15 +107,44 @@ std::string CSVQuery::getNextTime()
 	if (i == nextTimestep.nextTimestep.size()) {
 		i = 0;
 	}
+
 	return nextTime;
 };
 
+std::string CSVQuery::getNextTimeStep(std::string time) {
+	std::vector<std::string> data;
+
+	data.push_back("2020/03/17 17:01:24.884492");
+	data.push_back("2020/03/17 17:01:30.099017");
+	data.push_back("2020/03/17 17:01:35.103526");
+	data.push_back("2020/03/17 17:01:40.107326");
+	data.push_back("2020/03/17 17:01:45.111661");
+	data.push_back("2020/03/17 17:01:50.116610");
+	data.push_back("2020/03/17 17:01:55.120438");
+	data.push_back("2020/03/17 17:02:00.124758");
+
+	std::string next_timestamp = "";
+	for (auto& d : data)
+	{
+		if (d > time)
+		{
+			next_timestamp = d;
+			break;
+		}
+	}
+	if (next_timestamp == "")
+	{
+		next_timestamp = data[0];
+	}
+	return next_timestamp;
+};
 
 std::vector<CSVData> CSVQuery::getData(	CSVDataType type, std::string product, std::string timestamp) {
 
 	std::vector<CSVData> data_filters;
+	CSVReader nextTimestep;
 	//Traverse through the CSV file
-	for (const CSVData& d : data) {
+	for (const CSVData& d : nextTimestep.data) {
 
 		//If the values match, push the matches into data_filters
 		if (d.csvType == type &&
