@@ -27,7 +27,7 @@ private:
 	//Compute average ask or bid for the sent product over the sent number of time steps
 	void avg(std::string product, std::string csvType, std::string timestep);
 	//Predict max or min ask or bid for the sent product for the next time step
-	void predict();
+	void predict(std::string maxMin, std::string product, std::string csvType, std::string timestep);
 	//State current time in a dataset, i.e the timeframe we're in
 	void time();
 	// Move to the next timestep

@@ -67,7 +67,7 @@ void AdvisorMain::helpCmd(std::string input) {
         std::cout << "advisorbot> " << "avg ETH/BTC bid 10 -> average ETH/BTC bid over last 10 time steps" << std::endl;
     }
     else if (input == "predict") {
-        std::cout << "advisorbot> " << "predict max ETH/BTC bid -> The average ETH/BTC ask price over the last 10 timesteps was 1.0 " << std::endl;
+        std::cout << "advisorbot> " << "predict max ETH/BTC bid 10 -> The average ETH/BTC ask price over the last 10 timesteps was 1.0 " << std::endl;
     }
     else if (input == "time") {
         std::cout << "advisorbot> " << "time -> 2020/03/17 17:01:24" << std::endl;
@@ -96,9 +96,9 @@ void AdvisorMain::min(std::string product, std::string csvType) {
 
     //Gets the correct datatype based on the user entry
     CSVDataType type = CSVData::stringToCSVDataType(csvType);
-
     double minPrice = 0;
     std::vector<CSVData> entries;
+
     try
     {
         //Gets the correct datatype based on the user entry
@@ -113,26 +113,22 @@ void AdvisorMain::min(std::string product, std::string csvType) {
         std::cout << "AdvisorMain::CSVType Error!" << std::endl;
         throw;
     }
+
     //Get all products based on user entry
     for (std::string const& p : data.getProducts(product)) {
-        entries = data.getData(type, p, currentTime);
 
-        
+        entries = data.getData(type, p, currentTime);
+        //Send entried to the minPrice function to get the minimum price
+        minPrice = CSVQuery::minPrice(entries);
     }
-    minPrice = CSVQuery::minPrice(entries);
+      
     //If the entry is empty, it means the product wasn't found
     if (entries.size() == 0) {
         std::cout << "advisorbot> " << "Product not found! " << std::endl;
         return;
     }
-    /*Checks if the user entered bid or ask
-    and return the correct output*/
-    if (csvType == "ask") {
-        std::cout << std::fixed << "advisorbot> "<< "The min ask for " << product << " is " << minPrice << std::endl;
-    }
-    if (csvType == "bid") {
-        std::cout << std::fixed << "advisorbot> " << "The min bid for " << product << " is " << minPrice << std::endl;
-    }
+    //Display the result
+    std::cout <<"advisorbot> " << "The min " << csvType << " price for " << product << " is " << minPrice << "." << std::endl;
 };
 
 
@@ -162,21 +158,16 @@ void AdvisorMain::max(std::string product, std::string csvType) {
     for (std::string const& p : data.getProducts(product)) {
 
         entries = data.getData(type, p, currentTime);
-        
+        maxPrice = CSVQuery::maxPrice(entries); 
     }
-    maxPrice = CSVQuery::maxPrice(entries);
+ 
     //If the entry is empty, it means the product wasn't found
     if (entries.size() == 0) {
         std::cout << "advisorbot> " << "Product not found! " << std::endl;
         return;
     }
-
-    if (csvType == "ask") {
-        std::cout << std::fixed << "advisorbot> " << "The max ask for " << product << " is " << maxPrice << std::endl;
-    }
-    if (csvType == "bid") {
-        std::cout << std::fixed << "advisorbot> " << "The max bid for " << product << " is " << maxPrice << std::endl;
-    }
+    //Display the result
+    std::cout << "advisorbot> " << "The max " << csvType << " price for " << product << " is " << maxPrice << "." << std::endl;
 };
 
 
@@ -189,7 +180,6 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
     std::vector<CSVData> entries;
     //Store the current time in a temp variable
     std::string tempTime = currentTime;
-
 
     try
     {
@@ -222,34 +212,86 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
 
         //Get all products based on user entry in the current timestep
         for (std::string const& p : data.getProducts(product)) {
-
             entries = data.getData(type, p, currentTime);
             //Add all the bids/ask in the entries
             total += data.totPrice(entries);
-
         }
+        //Get the next timeframe
         currentTime = data.getNextTime();
-        
     }
+    
     //If the entry is empty, it means the product wasn't found
     if (entries.size() == 0) {
                std::cout << "advisorbot> " << "Product not found! " << std::endl;
                return;
            }
+    //Calculate the average
     avg = total / time;
-    if (csvType == "ask") {
-        std::cout << std::fixed << "advisorbot> " << "The average " << product << " ask price over the last " << timestep << " timesteps was " << avg << std::endl;
-    }
-    if (csvType == "bid") {
-        std::cout << std::fixed << "advisorbot> " << "The average " << product << " bid price over the last " << timestep << " timesteps was " << avg << std::endl;
-    } 
-    //Get back the current time
+
+    //Display the result
+    std::cout<< std::fixed << "advisorbot> " << "The average " << csvType << " price for " << product << " over the last "<<timestep<<" timesteps is " << avg << "." << std::endl;
+
+    //Go back to the current time
     currentTime = tempTime;
 };
 
 
-void AdvisorMain::predict() {
+void AdvisorMain::predict(std::string maxMin, std::string product, std::string csvType, std::string timestep) {
+    CSVDataType type;
+    int time = 0;
+    double avg = 0;
+    double total = 0;
+    std::vector<CSVData> entries;
+    //Store the current time in a temp variable
+    std::string tempTime = currentTime;
+    try
+    {
+        //Gets the correct datatype based on the user entry
+        type = CSVData::stringToCSVDataType(csvType);
+        if (type == CSVDataType::unknown) {
+            std::cout << "advisorbot> " << "Incorrect type. Enter bid or ask." << std::endl;
+            return;
+        }
+    }
+    catch (const std::exception&)
+    {
+        std::cout << "AdvisorMain::CSVType Error!" << std::endl;
+        throw;
+    }
 
+    try
+    {
+        /*Convert the string to an integer
+        and checks if the conversion is a valid integer*/
+        time = std::stoi(timestep);
+    }
+    catch (const std::exception&)
+    {
+        std::cout << "advisorbot> " << "Please enter a valid number!" << std::endl;
+        return;
+    }
+
+    for (unsigned int i = 0; i < time; i++) {
+
+        //Get all products based on user entry in the current timestep
+        for (std::string const& p : data.getProducts(product)) {
+            entries = data.getData(type, p, currentTime);
+            if (maxMin == "max") {
+                //Add all the bids/ask in the entries
+                total += data.maxPrice(entries);
+            }
+            else if (maxMin == "min") {
+                total += data.minPrice(entries);
+            }
+            
+        }
+        //Get the next timeframe
+        currentTime = data.getNextTime();
+    }
+    std::cout << "Price is " << total << std::endl;
+
+    //Go back to the current time
+    currentTime = tempTime;
 };
 
 
@@ -335,11 +377,11 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }
     }
     else if (input.at(0) == "predict") {
-        if (input.size() != 1) {
+        if (input.size() != 5) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
         else {
-            return predict();
+            return predict(input.at(1), input.at(2), input.at(3),input.at(4));
         }   
     }
     else if (input.at(0) == "time") {

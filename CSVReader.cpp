@@ -12,8 +12,8 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 
 	csvFile.open(filename);
 
-	if (csvFile.is_open()) {
-		std::cout << "File open1 " << std::endl;
+	if (!csvFile.is_open()) {
+		std::cout << "Error opening file " << std::endl;
 	}
 
 
@@ -74,7 +74,6 @@ std::vector<CSVData>  CSVReader::getLine(std::string time) {
 		csvFile.close();
 	}
 
-	std::cout << "File has " << data.size() << std::endl;
 	return data;
 };
 
@@ -84,7 +83,6 @@ CSVData CSVReader::stringsToCSVD(std::vector<std::string> tokens)
 
 	double price, amount;
 	if (tokens.size() != 5) {
-		std::cout << "Bad line" << std::endl;
 		throw std::exception{};
 	}
 
