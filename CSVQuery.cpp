@@ -5,11 +5,10 @@
 #include <iostream>
 #include <map>
 #include <cmath>
-#include <vector>
 
 
 CSVQuery::CSVQuery(std::string filename) {
-	data = CSVReader::readCSV(filename);
+	CSVReader::readCSV(filename);
 };
 
 std::vector<std::string> CSVQuery::tokenise(const std::string& csvLine, char separator) {
@@ -51,13 +50,13 @@ std::vector<std::string> CSVQuery::tokenise(const std::string& csvLine, char sep
 };
 
 std::vector<std::string> CSVQuery::getProducts(std::string product) {
-
+	//Declare csvreader object
+	CSVReader data;
 	std::vector<std::string> products;
-
 	std::map<std::string, bool> prodMap;
-	
+
 	//Find the products and put them in the Map
-	for (CSVData& d : data) {
+	for (CSVData& d : data.data) {
 		
 		if (product == "all") {
 			prodMap[d.product] = true;
@@ -79,52 +78,41 @@ std::vector<std::string> CSVQuery::getProducts(std::string product) {
 };
 
 std::string CSVQuery::getEarliestTime()
-{
-	CSVReader time;
-	std::string currentTime = time.currentTime;
+{	
+	//Declare csvreader object
+	CSVReader data;
+	std::string currentTime = data.currentTime;
 	
 	return currentTime;
 };
 
-std::string CSVQuery::getNextTime()
-{	//Object of csvreader
-	CSVReader nextTimestep;
-	std::string nextTime;
+
+std::string CSVQuery::getNextTimeStep(std::string time) {
+	std::vector<std::string> times;
+	CSVReader data;
+	//Push back all times to times vector
+	times.push_back("2020/03/17 17:01:24.884492");
+	times.push_back("2020/03/17 17:01:30.099017");
+	times.push_back("2020/03/17 17:01:35.103526");
+	times.push_back("2020/03/17 17:01:40.107326");
+	times.push_back("2020/03/17 17:01:45.111661");
+	times.push_back("2020/03/17 17:01:50.116610");
+	times.push_back("2020/03/17 17:01:55.120438");
+	times.push_back("2020/03/17 17:02:00.124758");
 
 	try
 	{
-		CSVReader::getLine(nextTimestep.nextTimestep[i]);
-		//Assign the value of the next time to fetch other lines
-		nextTime = nextTimestep.nextTimestep[i];
-
-		++i;
+		/*Get each line based on the last timestep
+		that is pushed into the nexttimestep vector in CSVReader class*/
+		data.getLine(data.nextTimestep);
 	}
 	catch (const std::exception&)
 	{
 
 	}
-	//If we have reached the end of our vector, go back to the start
-	if (i == nextTimestep.nextTimestep.size()) {
-		i = 0;
-	}
-
-	return nextTime;
-};
-
-std::string CSVQuery::getNextTimeStep(std::string time) {
-	std::vector<std::string> data;
-
-	data.push_back("2020/03/17 17:01:24.884492");
-	data.push_back("2020/03/17 17:01:30.099017");
-	data.push_back("2020/03/17 17:01:35.103526");
-	data.push_back("2020/03/17 17:01:40.107326");
-	data.push_back("2020/03/17 17:01:45.111661");
-	data.push_back("2020/03/17 17:01:50.116610");
-	data.push_back("2020/03/17 17:01:55.120438");
-	data.push_back("2020/03/17 17:02:00.124758");
 
 	std::string next_timestamp = "";
-	for (auto& d : data)
+	for (auto& d : times)
 	{
 		if (d > time)
 		{
@@ -134,17 +122,18 @@ std::string CSVQuery::getNextTimeStep(std::string time) {
 	}
 	if (next_timestamp == "")
 	{
-		next_timestamp = data[0];
+		next_timestamp = times[0];
 	}
+	
 	return next_timestamp;
 };
 
 std::vector<CSVData> CSVQuery::getData(	CSVDataType type, std::string product, std::string timestamp) {
-
+	//Declare csvreader object
+	CSVReader data;
 	std::vector<CSVData> data_filters;
-	CSVReader nextTimestep;
 	//Traverse through the CSV file
-	for (const CSVData& d : nextTimestep.data) {
+	for (const CSVData& d : data.data) {
 
 		//If the values match, push the matches into data_filters
 		if (d.csvType == type &&
@@ -158,7 +147,6 @@ std::vector<CSVData> CSVQuery::getData(	CSVDataType type, std::string product, s
 };
 
 double CSVQuery::minPrice(std::vector<CSVData> data) {
-
 	double min = data[0].price;
 
 	/*Checks if the price in the data is 
@@ -168,11 +156,15 @@ double CSVQuery::minPrice(std::vector<CSVData> data) {
 			min = d.price;
 		}
 	}
+	//Convert float to string to get lower values like "1e-08"
+	std::string placeholder = std::to_string(min);
+	//Convert it back to a float to extract the exact value
+	min = std::stof(placeholder);
+
 	return min;
 };
 
 double CSVQuery::maxPrice(std::vector<CSVData> data) {
-
 	double max = data[0].price;
 
 	/*Checks if the price in the data is
@@ -182,11 +174,11 @@ double CSVQuery::maxPrice(std::vector<CSVData> data) {
 			max = d.price;
 		}
 	}
+
 	return max;
 };
 
 double CSVQuery::totPrice(std::vector<CSVData> data) {
-
 	double total = 0;
 
 		//Find all the prices in a timestep

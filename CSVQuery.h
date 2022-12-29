@@ -19,11 +19,6 @@ public:
 	//returns earliest timeframe in the CSV file
 	std::string getEarliestTime();
 
-	/*returns next timestamp in the CSV file
-	if the function has reached the last timestamp
-	Go back to the first timestamp*/
-	std::string getNextTime();
-
 	//returns a vector of data according to the sent filters
 	std::vector<CSVData> getData(	CSVDataType type,
 									std::string product,
@@ -39,12 +34,6 @@ public:
 	//Get time for step function
 	std::string getNextTimeStep(std::string time);
 private:
-	//Vector based on the CSV file that will be used for querying
-	std::vector<CSVData> data;
-
-	//Used for looping
-	static inline unsigned int i = 1;
-
 	
 };
 
