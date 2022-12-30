@@ -1,7 +1,6 @@
 #include "AdvisorMain.h"
 #include <iostream>
 #include <vector>
-#include <string>
 
 
 AdvisorMain::AdvisorMain() {

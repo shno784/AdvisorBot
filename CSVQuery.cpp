@@ -77,8 +77,8 @@ std::vector<std::string> CSVQuery::getProducts(std::string product) {
 	return products;
 };
 
-std::string CSVQuery::getEarliestTime()
-{	
+std::string CSVQuery::getEarliestTime(){	
+
 	//Declare csvreader object
 	CSVReader data;
 	std::string currentTime = data.currentTime;
@@ -87,9 +87,10 @@ std::string CSVQuery::getEarliestTime()
 };
 
 
-std::string CSVQuery::getNextTimeStep(std::string& time) {
+std::string CSVQuery::getNextTimeStep(std::string& time){
+	//Declare csvreader object
 	CSVReader data;
-
+	std::string next_timestamp = "";
 	try
 	{
 		/*Get each line based on the last timestep
@@ -101,7 +102,7 @@ std::string CSVQuery::getNextTimeStep(std::string& time) {
 
 	}
 
-	std::string next_timestamp = "";
+	//Get the next time
 	for (auto& d : data.temps)
 	{
 		if (d > time)
@@ -110,6 +111,7 @@ std::string CSVQuery::getNextTimeStep(std::string& time) {
 			break;
 		}
 	}
+	//go back to first time if we have reached the last timestamp
 	if (next_timestamp == "")
 	{
 		next_timestamp = data.temps[0];

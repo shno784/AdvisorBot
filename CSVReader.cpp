@@ -1,13 +1,10 @@
 #include "CSVReader.h"
 #include <iostream>
-#include <fstream>
-#include <chrono>
-using namespace std;
 
 CSVReader::CSVReader() {
 	
 };
-auto start = chrono::steady_clock::now();
+
 //Load and read the CSV file
 std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 
@@ -76,10 +73,6 @@ std::vector<CSVData>  CSVReader::getLine(std::string& time) {
 	else {
 		csvFile.close();
 	}
-	auto end = chrono::steady_clock::now();
-	cout << "Elapsed time in seconds: "
-		<< chrono::duration_cast<chrono::milliseconds>(end - start).count()
-		<< " millisec" << endl;
 	return data;
 };
 
@@ -101,8 +94,6 @@ CSVData CSVReader::stringsToCSVD(std::vector<std::string> tokens)
 	}
 	catch (const std::exception)
 	{
-		std::cout << "Bad float! " << tokens[3] << std::endl;
-		std::cout << "Bad float! " << tokens[4] << std::endl;
 		throw std::exception{};
 	}
 
