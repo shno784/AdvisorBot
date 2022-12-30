@@ -87,18 +87,8 @@ std::string CSVQuery::getEarliestTime()
 };
 
 
-std::string CSVQuery::getNextTimeStep(std::string time) {
-	std::vector<std::string> times;
+std::string CSVQuery::getNextTimeStep(std::string& time) {
 	CSVReader data;
-	//Push back all times to times vector
-	times.push_back("2020/03/17 17:01:24.884492");
-	times.push_back("2020/03/17 17:01:30.099017");
-	times.push_back("2020/03/17 17:01:35.103526");
-	times.push_back("2020/03/17 17:01:40.107326");
-	times.push_back("2020/03/17 17:01:45.111661");
-	times.push_back("2020/03/17 17:01:50.116610");
-	times.push_back("2020/03/17 17:01:55.120438");
-	times.push_back("2020/03/17 17:02:00.124758");
 
 	try
 	{
@@ -112,7 +102,7 @@ std::string CSVQuery::getNextTimeStep(std::string time) {
 	}
 
 	std::string next_timestamp = "";
-	for (auto& d : times)
+	for (auto& d : data.temps)
 	{
 		if (d > time)
 		{
@@ -122,7 +112,7 @@ std::string CSVQuery::getNextTimeStep(std::string time) {
 	}
 	if (next_timestamp == "")
 	{
-		next_timestamp = times[0];
+		next_timestamp = data.temps[0];
 	}
 	
 	return next_timestamp;

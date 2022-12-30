@@ -47,7 +47,6 @@ void AdvisorMain::init() {
 void AdvisorMain::help() {
     std::cout << "advisorbot> " << "The available commands are: " << std::endl;
     std::cout << "help\nhelp <cmd>\navg\nprod\nmin\nmax\npredict\ntime\nstep" << std::endl;
-   
     
 };
 
@@ -116,7 +115,10 @@ void AdvisorMain::min(std::string product, std::string csvType) {
 
     //Get all products based on user entry
     for (std::string const& p : data.getProducts(product)) {
+
+        //Get the entries that match in the CSVfile
         entries = data.getData(type, p, currentTime);
+
         //Send entried to the minPrice function to get the minimum price
         minPrice = data.minPrice(entries);
     }
@@ -156,8 +158,10 @@ void AdvisorMain::max(std::string product, std::string csvType) {
     //Get all products based on user entry
     for (std::string const& p : data.getProducts(product)) {
 
+        //Get the entries that match in the CSVfile
         entries = data.getData(type, p, currentTime);
-        maxPrice = data.maxPrice(entries); 
+        //Get the max price of the entries
+        maxPrice = data.maxPrice(entries);
     }
  
     //If the entry is empty, it means the product wasn't found
@@ -216,6 +220,7 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         //Get all products based on user entry in the current timestep
         for (std::string const& p : data.getProducts(product)) {
 
+            //Get the entries that match in the CSVfile
             entries = data.getData(type, p, currentTime);
             //Add all the bids/ask in the entries
             total += data.totPrice(entries);
@@ -299,17 +304,11 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
 
         //Get all products based on user entry in the current timestep
         for (std::string const& p : data.getProducts(product)) {
+
+            //Get the entries that match in the CSVfile
             entries = data.getData(type, p, currentTime);
 
-            try
-            {
-                
-                total += totalmaxMin(entries);
-            }
-            catch (const std::exception&)
-            {
-
-            }
+            total += totalmaxMin(entries);
             
         }
         //Get the next timeframe
@@ -362,6 +361,8 @@ std::vector<std::string> AdvisorMain::getUserOption(std::string userInput) {
 void AdvisorMain::processUserOption(std::vector<std::string> input) {
     
     if (input.at(0) == "help") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 1) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -370,6 +371,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }       
     }
     else if (input.at(0) == "help cmd") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 2) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -378,6 +381,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }      
     }
     else if (input.at(0) == "prod") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 1) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -386,6 +391,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }     
     }
     else if (input.at(0) == "max") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 3) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -394,6 +401,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }
     }
     else if (input.at(0) == "min") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 3) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -402,6 +411,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }
     }
     else if (input.at(0) == "avg") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 4) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -410,6 +421,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }
     }
     else if (input.at(0) == "predict") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 5) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -418,6 +431,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }   
     }
     else if (input.at(0) == "time") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 1) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -426,6 +441,8 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }   
     }
     else if (input.at(0) == "step") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 1) {
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
@@ -434,8 +451,10 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }  
     }
     else if (input.at(0) == "exit") {
-        std::cout << input.at(0) << std::endl;
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
         if (input.size() != 1) {
+            //If he user doesn't enter anything, send an invalid input
             std::cout << "advisorbot> " << "Invalid input!" << std::endl;
         }
         else {
@@ -443,6 +462,7 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }
     }
     else {
+        //If the user doesn't enter the required info, send an invalid input
         std::cout << "advisorbot> " << "Invalid input!" << std::endl;
     }
 };

@@ -141,7 +141,7 @@
     <ClInclude Include="CSVReader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="20200317.csv" />
+    <None Include="..\..\8-zwpcUsQcOs8KXFLLHDoA_44a269c5c286402492999c4cf79073a4_merklerex_end_topic_5-cw_version_20200601\merklerex_end_topic_5\src\20200601.csv" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

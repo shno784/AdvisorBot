@@ -1,12 +1,13 @@
 #include "CSVReader.h"
 #include <iostream>
 #include <fstream>
-
+#include <chrono>
+using namespace std;
 
 CSVReader::CSVReader() {
 	
 };
-
+auto start = chrono::steady_clock::now();
 //Load and read the CSV file
 std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 
@@ -25,6 +26,7 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 		std::getline(csvFile, line);
 		CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
 
+		temps.push_back(csvd.timestamp);
 		nextTimestep= csvd.timestamp;
 		currentTime = csvd.timestamp;
 
@@ -40,7 +42,7 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 	return data;
 };
 
-std::vector<CSVData>  CSVReader::getLine(std::string time) {
+std::vector<CSVData>  CSVReader::getLine(std::string& time) {
 
 	std::string line;
 	
@@ -58,6 +60,7 @@ std::vector<CSVData>  CSVReader::getLine(std::string time) {
 				}
 				else {
 					//Grabs the first line that isn't equal to the time to store for later
+					temps.push_back(csvd.timestamp);
 					nextTimestep = csvd.timestamp;
 					break;
 				}
@@ -73,7 +76,10 @@ std::vector<CSVData>  CSVReader::getLine(std::string time) {
 	else {
 		csvFile.close();
 	}
-
+	auto end = chrono::steady_clock::now();
+	cout << "Elapsed time in seconds: "
+		<< chrono::duration_cast<chrono::milliseconds>(end - start).count()
+		<< " millisec" << endl;
 	return data;
 };
 

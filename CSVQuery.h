@@ -32,8 +32,8 @@ public:
 	static double totPrice(std::vector<CSVData> data);
 
 	//Get time for step function
-	std::string getNextTimeStep(std::string time);
+	std::string getNextTimeStep(std::string& time);
 private:
-	
+	unsigned int i = 0;
 };
 
