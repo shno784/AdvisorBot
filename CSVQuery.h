@@ -30,6 +30,8 @@ public:
 	static double maxPrice(std::vector<CSVData> data);
 	//returns the total price over set amount of timesteps
 	static double totPrice(std::vector<CSVData> data);
+	//returns the total amount over set amount of timesteps
+	static double totAmount(std::vector<CSVData> data);
 
 	//Get time for step function
 	std::string getNextTimeStep(std::string& time);

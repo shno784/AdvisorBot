@@ -177,5 +177,23 @@ double CSVQuery::totPrice(std::vector<CSVData> data) {
 		for (const CSVData& d : data) {
 			total += d.price;
 		}
+		//Convert float to string to get lower values like "1e-08"
+		std::string placeholder = std::to_string(total);
+		//Convert it back to a float to extract the exact value
+		total = std::stof(placeholder);
 		return total;
+};
+
+double CSVQuery::totAmount(std::vector<CSVData> data) {
+	double total = 0;
+
+	//Find all the prices in a timestep
+	for (const CSVData& d : data) {
+		total += d.amount;
+	}
+	//Convert float to string to get lower values like "1e-08"
+	std::string placeholder = std::to_string(total);
+	//Convert it back to a float to extract the exact value
+	total = std::stof(placeholder);
+	return total;
 };

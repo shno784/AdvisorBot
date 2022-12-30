@@ -1,6 +1,7 @@
 #include "AdvisorMain.h"
 #include <iostream>
 #include <vector>
+#include <map>
 
 
 AdvisorMain::AdvisorMain() {
@@ -81,12 +82,14 @@ void AdvisorMain::helpCmd(std::string input) {
 
 void AdvisorMain::prod() {
     std::cout << "advisorbot> "<< "The Products are: " << std::endl;
-
+    
+    
     //Get all the products from the get product function
     for (std::string const& p : data.getProducts("all")) {
-        
+        //Show all products to the user
         std::cout << p << std::endl;
     }
+
 };
 
 
@@ -141,7 +144,7 @@ void AdvisorMain::max(std::string product, std::string csvType) {
 
     try
     {
-        //Gets the correct datatype based on the user entry
+        //Get the correct datatype based on the user entry
         type = CSVData::stringToCSVDataType(csvType);
         if (type == CSVDataType::unknown) {
             std::cout << "advisorbot> " << "Incorrect type. Enter bid or ask." << std::endl;
@@ -287,7 +290,6 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
             totalmaxMin = data.maxPrice;
         }
         else {
-            std::cout << "maxmin " << maxMin << std::endl;
             throw std::exception{};
         }
        
@@ -325,6 +327,67 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
     currentTime = tempTime;
 };
 
+void AdvisorMain::rank(std::string csvType, std::string priceAmount) {
+
+    //Get the correct datatype based on the user entry
+    CSVDataType type = CSVData::stringToCSVDataType(csvType);
+    double total = 0;
+    std::map<std::string, double> myMap;
+    std::vector<CSVData> entries;
+    //Declare a pointer variable and set it to null
+    double (*PriceOrAmount)(std::vector<CSVData>) = NULL;
+
+    try
+    {
+        //Gets the correct datatype based on the user entry
+        type = CSVData::stringToCSVDataType(csvType);
+        if (type == CSVDataType::unknown) {
+            std::cout << "advisorbot> " << "Incorrect type. Enter bid or ask." << std::endl;
+            return;
+        }
+    }
+    catch (const std::exception&)
+    {
+        std::cout << "advisorbot> " << "AdvisorMain::CSVType Error!" << std::endl;
+        throw;
+    }
+
+    try
+    {
+        /*Check if the user entered price or amount
+        and points the variable "PriceOrAmount" to the correct function*/
+        if (priceAmount == "price") {
+            PriceOrAmount = data.totPrice;
+        }
+        else if (priceAmount == "amount") {
+            PriceOrAmount = data.totAmount;
+        }
+        else {
+            throw std::exception{};
+        }
+    }
+    catch (const std::exception&)
+    {
+        std::cout << "advisorbot> Invalid syntax!" << std::endl;
+        return;
+    }
+    //Get all the products from the get product function
+    for (std::string const& p : data.getProducts("all")) {
+        //Get the entries that match in the CSVfile
+        entries = data.getData(type, p, currentTime);
+
+        total = PriceOrAmount(entries);
+        myMap.emplace(p, total);
+    }
+    std::cout << std::endl;
+    std::cout << "Rank            Product             " << priceAmount << std::endl;
+    std::cout << std::endl;
+    // Print the values in the map
+    for (const auto& [key, value] : myMap)
+    {
+        std::cout << key << ": " << value << std::endl;
+    }
+}
 
 void AdvisorMain::time() {
     std::cout << "advisorbot> " << currentTime << std::endl;
@@ -458,6 +521,16 @@ void AdvisorMain::processUserOption(std::vector<std::string> input) {
         }
         else {
             return;
+        }
+    }
+    else if (input.at(0) == "rank") {
+        /*Ensure that the size of the input vector matches the exact
+        amount of words needed to call and use the function*/
+        if (input.size() != 3) {
+            std::cout << "advisorbot> " << "Invalid input!" << std::endl;
+        }
+        else {
+            return rank(input.at(1), input.at(2));
         }
     }
     else {
