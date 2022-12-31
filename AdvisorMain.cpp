@@ -1,8 +1,10 @@
 #include "AdvisorMain.h"
 #include <iostream>
 #include <vector>
+#include <string>
 #include <map>
 #include <algorithm>
+#include <iomanip>
 
 
 AdvisorMain::AdvisorMain() {
@@ -102,23 +104,20 @@ void AdvisorMain::prod() {
 void AdvisorMain::min(std::string product, std::string csvType) {
 
     //Gets the correct datatype based on the user entry
-    CSVDataType type = CSVData::stringToCSVDataType(csvType);
+    CSVDataType type;
     double minPrice = 0;
     std::vector<CSVData> entries;
 
+    //Check if ask or bid has been entered as the csvType
     try
     {
-        //Gets the correct datatype based on the user entry
         type = CSVData::stringToCSVDataType(csvType);
-        if (type == CSVDataType::unknown) {
-            std::cout << "Incorrect type. Enter bid or ask." << std::endl;
-            return;
-        }
+        if (!utils.checkDataType(csvType)) throw std::exception{};
     }
     catch (const std::exception&)
     {
-        std::cout << "AdvisorMain::CSVType Error!" << std::endl;
-        throw;
+        std::cout << "advisorbot> Please enter ask or bid!" << std::endl;
+        return;
     }
 
     //Get all products based on user entry
@@ -128,7 +127,7 @@ void AdvisorMain::min(std::string product, std::string csvType) {
         entries = data.getData(type, p, currentTime);
 
         //Send entried to the minPrice function to get the minimum price
-        minPrice = data.minPrice(entries);
+        minPrice = utils.minPrice(entries);
     }
       
     //If the entry is empty, it means the product wasn't found
@@ -137,30 +136,27 @@ void AdvisorMain::min(std::string product, std::string csvType) {
         return;
     }
     //Display the result
-    std::cout <<"advisorbot> " << "The min " << csvType << " price for " << product << " is " << minPrice << "." << std::endl;
+    std::cout <<std::fixed <<"advisorbot> " << "The min " << csvType << " price for " << product << " is " << minPrice << "." << std::endl;
 };
 
 
 void AdvisorMain::max(std::string product, std::string csvType) {
 
     //Gets the correct datatype based on the user entry
-    CSVDataType type = CSVData::stringToCSVDataType(csvType);
+    CSVDataType type;
     std::vector<CSVData> entries;
     double maxPrice = 0;
 
+    //Check if ask or bid has been entered as the csvType
     try
     {
-        //Get the correct datatype based on the user entry
         type = CSVData::stringToCSVDataType(csvType);
-        if (type == CSVDataType::unknown) {
-            std::cout << "advisorbot> " << "Incorrect type. Enter bid or ask." << std::endl;
-            return;
-        }
+        if (!utils.checkDataType(csvType)) throw std::exception{};
     }
     catch (const std::exception&)
     {
-        std::cout << "advisorbot> " << "AdvisorMain::CSVType Error!" << std::endl;
-        throw;
+        std::cout << "advisorbot> Please enter ask or bid!" << std::endl;
+        return;
     }
 
     //Get all products based on user entry
@@ -169,7 +165,7 @@ void AdvisorMain::max(std::string product, std::string csvType) {
         //Get the entries that match in the CSVfile
         entries = data.getData(type, p, currentTime);
         //Get the max price of the entries
-        maxPrice = data.maxPrice(entries);
+        maxPrice = utils.maxPrice(entries);
     }
  
     //If the entry is empty, it means the product wasn't found
@@ -178,7 +174,7 @@ void AdvisorMain::max(std::string product, std::string csvType) {
         return;
     }
     //Display the result
-    std::cout << "advisorbot> " << "The max " << csvType << " price for " << product << " is " << maxPrice << "." << std::endl;
+    std::cout<<std::fixed << "advisorbot> " << "The max " << csvType << " price for " << product << " is " << maxPrice << "." << std::endl;
 };
 
 
@@ -191,23 +187,21 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
     //Store the current time in a temp variable
     std::string tempTime = currentTime;
 
+    //Check if ask or bid has been entered as the csvType
     try
     {
-        //Gets the correct datatype based on the user entry
         type = CSVData::stringToCSVDataType(csvType);
-        if (type == CSVDataType::unknown) {
-            std::cout << "advisorbot> Incorrect type. Enter bid or ask." << std::endl;
-            return;
-        }
+        if (!utils.checkDataType(csvType)) throw std::exception{};
     }
     catch (const std::exception&)
     {
-        std::cout << "AdvisorMain::CSVType Error!" << std::endl;
-        throw;
+        std::cout << "advisorbot> Please enter ask or bid!" << std::endl;
+        return;
     }
 
     try
     {
+        //Checks if the string only has letters
         for (char c : timestep) {
             if (!std::isdigit(c)) {
                 throw std::exception{};
@@ -215,12 +209,16 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         }
         //Convert the string to an integer 
         time = std::stoi(timestep);
-        //Checks if the string only has letters
+        
+        //Checks if the number entered is more than 0
+        if (time <= 0) {
+            throw std::exception{};
+        }
 
     }
     catch (const std::exception&)
     {
-        std::cout << "advisorbot> Please enter a valid number!" << std::endl;
+        std::cout << "advisorbot> Please enter a valid number that is greater than 0!" << std::endl;
         return;
     }
 
@@ -231,7 +229,7 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
             //Get the entries that match in the CSVfile
             entries = data.getData(type, p, currentTime);
             //Add all the bids/ask in the entries
-            total += data.totPrice(entries);
+            total += utils.totPrice(entries);
         }
         //Get the next timeframe
         currentTime = data.getNextTimeStep(currentTime);
@@ -261,18 +259,16 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
     std::string tempTime = currentTime;
     //Declare a pointer variable and set it to null
     double (*totalmaxMin)(std::vector<CSVData>) = NULL;
-    //Try to get the valid csv type
+
+    //Check if ask or bid has been entered as the csvType
     try
     {
-        //Gets the correct datatype based on the user entry
         type = CSVData::stringToCSVDataType(csvType);
-        if (type == CSVDataType::unknown) {
-            throw std::exception{};
-        }
+        if (!utils.checkDataType(csvType)) throw std::exception{};
     }
     catch (const std::exception&)
     {
-        std::cout << "advisorbot> " << "Incorrect type. Enter bid or ask." << std::endl;
+        std::cout << "advisorbot> Please enter ask or bid!" << std::endl;
         return;
     }
     //Try to turn the string into an integer
@@ -287,26 +283,37 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
         and checks if the conversion is a valid integer*/
         time = std::stoi(timestep);
 
-        /*Check if the user entered min or max 
+        //Checks if the number entered is more than 0
+        if (time <= 0) {
+            throw std::exception{};
+        }
+    }
+    catch (const std::exception&)
+    {
+        std::cout << "advisorbot> Please enter a valid number that is greater than 0!" << std::endl;
+        return;
+    }
+   
+    try
+    {
+
+        /*Check if the user entered min or max
         and points the variable "totalmaxmin" to the correct function*/
         if (maxMin == "min") {
-            totalmaxMin = data.minPrice;
+            totalmaxMin = utils.minPrice;
         }
         else if (maxMin == "max") {
-            totalmaxMin = data.maxPrice;
+            totalmaxMin = utils.maxPrice;
         }
         else {
             throw std::exception{};
         }
-       
     }
     catch (const std::exception&)
     {
-        std::cout << "advisorbot> Invalid syntax"<< std::endl;
+        std::cout << "advisorbot> Please enter min or max" << std::endl;
         return;
     }
-   
-
     for (unsigned int i = 0; i < time; i++) {
 
         //Get all products based on user entry in the current timestep
@@ -326,7 +333,7 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
         std::cout << "advisorbot> " << "Product not found! " << std::endl;
         return;
     }
-    std::cout << "advisorbot> The average " << maxMin << " price over the next " << timestep << " timesteps is " << total / time << "." << std::endl;
+    std::cout<<std::fixed << "advisorbot> The average " << maxMin << " price over the next " << timestep << " timesteps is " << total / time << "." << std::endl;
 
 
     //Go back to the current time
@@ -336,27 +343,27 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
 void AdvisorMain::rank(std::string csvType, std::string priceAmount) {
 
     //Get the correct datatype based on the user entry
-    CSVDataType type = CSVData::stringToCSVDataType(csvType);
+    CSVDataType type;
     double total = 0;
-    std::map<std::string, double> myMap;
+    //Declare a vctor of pairs to copy maps into
+    std::vector<std::pair<std::string, double>> rank;
+
     std::vector<CSVData> entries;
     //Declare a pointer variable and set it to null
     double (*PriceOrAmount)(std::vector<CSVData>) = NULL;
     //Used to rank the products
     unsigned int count = 1;
+
+    //Check if ask or bid has been entered as the csvType
     try
     {
-        //Gets the correct datatype based on the user entry
         type = CSVData::stringToCSVDataType(csvType);
-        if (type == CSVDataType::unknown) {
-            std::cout << "advisorbot> " << "Incorrect type. Enter bid or ask." << std::endl;
-            return;
-        }
+        if (!utils.checkDataType(csvType)) throw std::exception{};
     }
     catch (const std::exception&)
     {
-        std::cout << "advisorbot> " << "AdvisorMain::CSVType Error!" << std::endl;
-        throw;
+        std::cout << "advisorbot> Please enter ask or bid!" << std::endl;
+        return;
     }
 
     try
@@ -364,10 +371,10 @@ void AdvisorMain::rank(std::string csvType, std::string priceAmount) {
         /*Check if the user entered price or amount
         and points the variable "PriceOrAmount" to the correct function*/
         if (priceAmount == "price") {
-            PriceOrAmount = data.totPrice;
+            PriceOrAmount = utils.totPrice;
         }
         else if (priceAmount == "amount") {
-            PriceOrAmount = data.totAmount;
+            PriceOrAmount = utils.totAmount;
         }
         else {
             throw std::exception{};
@@ -384,18 +391,23 @@ void AdvisorMain::rank(std::string csvType, std::string priceAmount) {
         entries = data.getData(type, p, currentTime);
 
         total = PriceOrAmount(entries);
-        myMap.emplace(p, total);
+        //Push back the product and total of that product as pairs in the vector
+        rank.push_back({ p, total });
     }
+    //Display the ranks
     std::cout << "advisorbot> Rank of Products in current Timestep are: " << std::endl;
     std::cout << std::endl;
-    std::cout << "Rank            Product             " << priceAmount << std::endl;
+    std::cout << "Rank" << std::setw(30) <<"Product" << std::setw(30) << priceAmount << std::endl;
     std::cout << std::endl;
 
-    /*std::sort(myMap.begin(), myMap.end());*/
+    //Sort the vector based on the values of the pairs
+    std::sort(rank.begin(), rank.end(), utils.sortByVal);
+    
     // Print the values in the map
-    for (auto i = myMap.begin(); i != myMap.end(); ++i)
+    for (auto i = rank.begin(); i != rank.end(); ++i)
     {
-        std::cout << count <<"               " << i->first<<"             " << i->second << std::endl;
+        //std::setw to set the width
+        std::cout<<std::fixed << count <<std::setw(34) << i->first << std::setw(34) << i->second << std::endl;
         count++;
     }
 }
@@ -420,7 +432,7 @@ std::vector<std::string> AdvisorMain::getUserOption(std::string userInput) {
     try
     {
         // Takes the input from the user and puts it into a vector based on white space.
-        std::vector<std::string> newInput = CSVQuery::tokenise(userInput, ' ');
+        std::vector<std::string> newInput = utils.tokenise(userInput, ' ');
         return newInput;
     }
     catch (const std::exception& e)

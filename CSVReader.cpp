@@ -21,7 +21,7 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 	{
 		//Get the first line o the csv file
 		std::getline(csvFile, line);
-		CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
+		CSVData csvd = stringsToCSVD(Utils::tokenise(line, ','));
 
 		temps.push_back(csvd.timestamp);
 		nextTimestep= csvd.timestamp;
@@ -49,7 +49,7 @@ std::vector<CSVData>  CSVReader::getLine(std::string& time) {
 		while (std::getline(csvFile, line)) {
 			try
 			{
-				CSVData csvd = stringsToCSVD(CSVQuery::tokenise(line, ','));
+				CSVData csvd = stringsToCSVD(Utils::tokenise(line, ','));
 				/*If the timestamp for the line being read is the same as the timestamp entered
 				push it back to the data vector*/
 				if (csvd.timestamp == time) {

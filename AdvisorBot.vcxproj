@@ -133,12 +133,14 @@
     <ClCompile Include="CSVQuery.cpp" />
     <ClCompile Include="CSVReader.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdvisorMain.h" />
     <ClInclude Include="CSVData.h" />
     <ClInclude Include="CSVQuery.h" />
     <ClInclude Include="CSVReader.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\8-zwpcUsQcOs8KXFLLHDoA_44a269c5c286402492999c4cf79073a4_merklerex_end_topic_5-cw_version_20200601\merklerex_end_topic_5\src\20200601.csv" />
