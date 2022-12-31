@@ -1,6 +1,5 @@
 #include "CSVData.h"
 
-//CSV data object
 CSVData::CSVData(double _price,
 	double _amount,
 	std::string _timestamp,
@@ -16,7 +15,6 @@ CSVData::CSVData(double _price,
 
 }
 
-//Checks to see which datatype the user entered
 CSVDataType CSVData::stringToCSVDataType(const std::string& s) {
 	if (s == "ask") {
 		return CSVDataType::ask;
@@ -27,4 +25,16 @@ CSVDataType CSVData::stringToCSVDataType(const std::string& s) {
 	}
 
 	return CSVDataType::unknown;
-}
+};
+
+CSVMaxMin CSVData::stringToCSVMaxMin(const std::string& s) {
+	if (s == "max") {
+		return CSVMaxMin::max;
+	}
+
+	if (s == "min") {
+		return CSVMaxMin::min;
+	}
+
+	return CSVMaxMin::unknown;
+};

@@ -199,21 +199,11 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         return;
     }
 
+    //Try to turn the string into an integer
     try
     {
-        //Checks if the string only has letters
-        for (char c : timestep) {
-            if (!std::isdigit(c)) {
-                throw std::exception{};
-            }
-        }
-        //Convert the string to an integer 
-        time = std::stoi(timestep);
-        
-        //Checks if the number entered is more than 0
-        if (time <= 0) {
-            throw std::exception{};
-        }
+        if (!utils.checkTime(timestep)) throw std::exception{};
+        time = stoi(timestep);
 
     }
     catch (const std::exception&)
@@ -222,7 +212,7 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         return;
     }
 
-    for (unsigned int i = 0; i < time; i++) {
+    for (int i = 0; i < time; ++i) {
         //Get all products based on user entry in the current timestep
         for (std::string const& p : data.getProducts(product)) {
 
@@ -252,6 +242,7 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
 
 void AdvisorMain::predict(std::string maxMin, std::string product, std::string csvType, std::string timestep) {
     CSVDataType type;
+    CSVMaxMin minMax;
     int time = 0;
     std::vector<CSVData> entries;
     double total = 0;
@@ -274,19 +265,9 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
     //Try to turn the string into an integer
     try
     {
-        for (char c : timestep) {
-            if (!std::isdigit(c)) {
-                throw std::exception{};
-            }
-        }
-        /*Convert the string to an integer
-        and checks if the conversion is a valid integer*/
-        time = std::stoi(timestep);
+        if (!utils.checkTime(timestep)) throw std::exception{};
+        time = stoi(timestep);
 
-        //Checks if the number entered is more than 0
-        if (time <= 0) {
-            throw std::exception{};
-        }
     }
     catch (const std::exception&)
     {
@@ -296,25 +277,25 @@ void AdvisorMain::predict(std::string maxMin, std::string product, std::string c
    
     try
     {
+        //if minMax isn't max or bid, throw an exception
+        minMax = CSVData::stringToCSVMaxMin(maxMin);
+        if (!utils.checkMaxMin(maxMin)) throw std::exception{};
 
-        /*Check if the user entered min or max
-        and points the variable "totalmaxmin" to the correct function*/
-        if (maxMin == "min") {
-            totalmaxMin = utils.minPrice;
-        }
-        else if (maxMin == "max") {
+        if (minMax == CSVMaxMin::max) {
             totalmaxMin = utils.maxPrice;
         }
         else {
-            throw std::exception{};
+            totalmaxMin = utils.minPrice;
         }
+
     }
     catch (const std::exception&)
     {
         std::cout << "advisorbot> Please enter min or max" << std::endl;
         return;
     }
-    for (unsigned int i = 0; i < time; i++) {
+
+    for (int i = 0; i < time; ++i) {
 
         //Get all products based on user entry in the current timestep
         for (std::string const& p : data.getProducts(product)) {
@@ -365,7 +346,7 @@ void AdvisorMain::rank(std::string csvType, std::string priceAmount) {
         std::cout << "advisorbot> Please enter ask or bid!" << std::endl;
         return;
     }
-
+    //Check if price or amount has been entered
     try
     {
         /*Check if the user entered price or amount
@@ -435,7 +416,7 @@ std::vector<std::string> AdvisorMain::getUserOption(std::string userInput) {
         std::vector<std::string> newInput = utils.tokenise(userInput, ' ');
         return newInput;
     }
-    catch (const std::exception& e)
+    catch (const std::exception&)
     {
         std::cout << "AdvisorMain::getUserOption ERROR!! " << std::endl;
         throw;

@@ -7,7 +7,7 @@ Utils::Utils() {
 std::vector<std::string> Utils::tokenise(const std::string& csvLine, char separator) {
 	std::vector<std::string> tokens;
 
-	signed int start, end;
+	int64_t start, end;
 	//find all characters before the separator
 	start = csvLine.find_first_not_of(separator);
 	std::string token;
@@ -97,12 +97,37 @@ bool Utils::sortByVal(const std::pair<std::string, double>& a, const std::pair<s
 };
 
 bool Utils::checkDataType(std::string csvType) {
-	//Get the type 
-	CSVDataType type = CSVData::stringToCSVDataType(csvType);
-
+ 
 	//If the type isn't ask or bid, return false
-	type = CSVData::stringToCSVDataType(csvType);
+	CSVDataType type = CSVData::stringToCSVDataType(csvType);
 	if (type == CSVDataType::unknown) {
+		return false;
+	}
+	else {
+		return true;
+	}
+};
+
+bool Utils::checkTime(std::string time) {
+
+	//Checks if the string only has letters
+	for (char c : time) {
+		if (!std::isdigit(c)) {
+			return false;
+		}
+	}
+	//Checks if the number entered is more than 0
+	if (stoi(time) <= 0) {
+		return false;
+	}
+
+	return true;
+};
+
+bool Utils::checkMaxMin(std::string maxMin) {
+	//If the type isn't min or max, return false
+	CSVMaxMin type = CSVData::stringToCSVMaxMin(maxMin);
+	if (type == CSVMaxMin::unknown) {
 		return false;
 	}
 	else {

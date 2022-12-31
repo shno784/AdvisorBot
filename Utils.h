@@ -20,7 +20,11 @@ public:
 	static double totAmount(std::vector<CSVData> data);
 	//Sorts maps by value and returns them in ascending order
 	static bool sortByVal(const std::pair<std::string, double>& a, const std::pair<std::string, double>& b);
-
-	bool checkDataType(std::string csvType);
+	//Check if the datatype entered is a valid one
+	static bool checkDataType(std::string csvType);
+	//Check if entered is the correct maxMin type
+	static bool checkMaxMin(std::string maxMin);
+	//Validate if a correct string was entered to convert to an int and if the string is more than 0
+	static bool checkTime(std::string time);
 };
 
