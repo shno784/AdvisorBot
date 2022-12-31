@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 
 AdvisorMain::AdvisorMain() {
@@ -73,6 +74,11 @@ void AdvisorMain::helpCmd(std::string input) {
     }
     else if (input == "step") {
         std::cout << "advisorbot> " << "step -> now at 2020/03/17 17:01:30" << std::endl;
+    }
+    else if (input == "rank") {
+        std::cout << "advisorbot> rank ask amount ->\nRank            Product             amount\n" <<
+                                                       "1.            ETH/BTC               239\n" <<
+                                                       "2.            DOGE/USDT             210" << std::endl;
     }
     else {
         std::cout << "advisorbot> " << "Invalid Command!" << std::endl;
@@ -336,7 +342,8 @@ void AdvisorMain::rank(std::string csvType, std::string priceAmount) {
     std::vector<CSVData> entries;
     //Declare a pointer variable and set it to null
     double (*PriceOrAmount)(std::vector<CSVData>) = NULL;
-
+    //Used to rank the products
+    unsigned int count = 1;
     try
     {
         //Gets the correct datatype based on the user entry
@@ -379,13 +386,17 @@ void AdvisorMain::rank(std::string csvType, std::string priceAmount) {
         total = PriceOrAmount(entries);
         myMap.emplace(p, total);
     }
+    std::cout << "advisorbot> Rank of Products in current Timestep are: " << std::endl;
     std::cout << std::endl;
     std::cout << "Rank            Product             " << priceAmount << std::endl;
     std::cout << std::endl;
+
+    /*std::sort(myMap.begin(), myMap.end());*/
     // Print the values in the map
-    for (const auto& [key, value] : myMap)
+    for (auto i = myMap.begin(); i != myMap.end(); ++i)
     {
-        std::cout << key << ": " << value << std::endl;
+        std::cout << count <<"               " << i->first<<"             " << i->second << std::endl;
+        count++;
     }
 }
 
