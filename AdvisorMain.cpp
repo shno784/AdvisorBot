@@ -181,6 +181,8 @@ void AdvisorMain::max(std::string product, std::string csvType) {
 void AdvisorMain::avg(std::string product, std::string csvType, std::string timestep) {
 
     CSVDataType type;
+    //Create a csvreader object
+    CSVReader file;
     int time = 0;
     double total = 0;
     std::vector<CSVData> entries;
@@ -211,7 +213,14 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         std::cout << "advisorbot> Please enter a valid number that is greater than 0!" << std::endl;
         return;
     }
-
+    
+    if (!file.csvFile.is_open() || time < data.stepCount) {
+        currentTime = data.getPrevTimeStep(currentTime);
+    }
+    else {
+        std::cout << "advisorbot> You have not made " << time << " steps to calculate this average." << std::endl;
+        return;
+    }
     for (int i = 0; i < time; ++i) {
         //Get all products based on user entry in the current timestep
         for (std::string const& p : data.getProducts(product)) {

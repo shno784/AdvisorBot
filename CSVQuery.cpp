@@ -93,7 +93,20 @@ std::string CSVQuery::getNextTimeStep(std::string& time){
 	{
 		next_timestamp = data.timestepVec[0];
 	}
-	
+	//increment stepcount
+	stepCount++;
+
 	return next_timestamp;
 };
 
+
+std::string CSVQuery::getPrevTimeStep(std::string& time) {
+	//Declare csvreader object
+	CSVReader data;
+	std::string prev_timestamp = "";
+
+	//Get the previous time
+	for (auto it = data.timestepVec.rbegin(); it != data.timestepVec.rend(); ++it) {
+		std::cout << *it << std::endl;
+	}
+};

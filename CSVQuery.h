@@ -23,8 +23,12 @@ public:
 									std::string product,
 									std::string timestamp);
 
-	//Get time for step function
+	//Get the next time in the csv file
 	std::string getNextTimeStep(std::string& time);
+	//Get the previous time in the csv file
+	std::string getPrevTimeStep(std::string& time);
+	//Count the number of steps taken
+	unsigned int stepCount = 0;
 private:
 	unsigned int i = 0;
 };
