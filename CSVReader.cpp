@@ -5,7 +5,6 @@ CSVReader::CSVReader() {
 	
 };
 
-//Load and read the CSV file
 std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 
 	csvFile.open(filename);
@@ -23,8 +22,8 @@ std::vector<CSVData> CSVReader::readCSV(std::string filename) {
 		std::getline(csvFile, line);
 		CSVData csvd = stringsToCSVD(Utils::tokenise(line, ','));
 
-		temps.push_back(csvd.timestamp);
-		nextTimestep= csvd.timestamp;
+		timestepVec.push_back(csvd.timestamp);
+		nextTimestamp = csvd.timestamp;
 		currentTime = csvd.timestamp;
 
 		data.push_back(csvd);
@@ -57,8 +56,8 @@ std::vector<CSVData>  CSVReader::getLine(std::string& time) {
 				}
 				else {
 					//Grabs the first line that isn't equal to the time to store for later
-					temps.push_back(csvd.timestamp);
-					nextTimestep = csvd.timestamp;
+					timestepVec.push_back(csvd.timestamp);
+					nextTimestamp = csvd.timestamp;
 					break;
 				}
 

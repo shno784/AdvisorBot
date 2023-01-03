@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="..\..\8-zwpcUsQcOs8KXFLLHDoA_44a269c5c286402492999c4cf79073a4_merklerex_end_topic_5-cw_version_20200601\merklerex_end_topic_5\src\20200601.csv">
+    <None Include="..\..\..\Downloads\20200601.csv">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

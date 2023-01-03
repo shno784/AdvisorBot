@@ -71,9 +71,8 @@ std::string CSVQuery::getNextTimeStep(std::string& time){
 	std::string next_timestamp = "";
 	try
 	{
-		/*Get each line based on the last timestep
-		that is pushed into the nexttimestep vector in CSVReader class*/
-		data.getLine(data.nextTimestep);
+		/*Get each line based on the next timestep*/
+		data.getLine(data.nextTimestamp);
 	}
 	catch (const std::exception&)
 	{
@@ -81,7 +80,7 @@ std::string CSVQuery::getNextTimeStep(std::string& time){
 	}
 
 	//Get the next time
-	for (auto& d : data.temps)
+	for (auto& d : data.timestepVec)
 	{
 		if (d > time)
 		{
@@ -92,7 +91,7 @@ std::string CSVQuery::getNextTimeStep(std::string& time){
 	//go back to first time if we have reached the last timestamp
 	if (next_timestamp == "")
 	{
-		next_timestamp = data.temps[0];
+		next_timestamp = data.timestepVec[0];
 	}
 	
 	return next_timestamp;
