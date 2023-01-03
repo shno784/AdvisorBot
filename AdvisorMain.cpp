@@ -214,8 +214,8 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         return;
     }
     
-    //Run the code if the time entered is less than the amount of timesteps taken.
-    if (time < data.stepCount) {
+    //Run the code if the time entered is less than or equal to the amount of timesteps taken.
+    if (time <= data.stepCount) {
         for (int i = 0; i < time; ++i) {
             //Get all products based on user entry in the current timestep
             for (std::string const& p : data.getProducts(product)) {
@@ -231,7 +231,7 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         
     }
     else {
-        std::cout << "advisorbot> You have not made " << time << " steps to calculate this average." << std::endl;
+        std::cout << "advisorbot> You have not made " << time << " step(s) to calculate this average." << std::endl;
         return;
     }
 
