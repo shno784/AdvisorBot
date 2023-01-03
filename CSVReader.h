@@ -20,10 +20,10 @@ public:
 	static inline std::string currentTime;
 	//Store the times in a vector to change the time
 	static inline std::vector<std::string> timestepVec;
-	//Access the csvFile anywhere in the class
-	static inline std::ifstream csvFile;
 
 private:
 	//Convert strings to CSV data
 	static CSVData stringsToCSVD(std::vector<std::string> tokens);
+	//Access the csvFile anywhere in the class
+	static inline std::ifstream csvFile;
 };

@@ -214,27 +214,27 @@ void AdvisorMain::avg(std::string product, std::string csvType, std::string time
         return;
     }
     
-    if (!file.csvFile.is_open() || time < data.stepCount) {
-        currentTime = data.getPrevTimeStep(currentTime);
+    //Run the code if the time entered is less than the amount of timesteps taken.
+    if (time < data.stepCount) {
+        for (int i = 0; i < time; ++i) {
+            //Get all products based on user entry in the current timestep
+            for (std::string const& p : data.getProducts(product)) {
+
+                //Get the entries that match in the CSVfile
+                entries = data.getData(type, p, currentTime);
+                //Add all the bids/ask in the entries
+                total += utils.totPrice(entries);
+            }
+            //Get the previous timeframe
+            currentTime = data.getPrevTimeStep(currentTime);
+        }
+        
     }
     else {
         std::cout << "advisorbot> You have not made " << time << " steps to calculate this average." << std::endl;
         return;
     }
-    for (int i = 0; i < time; ++i) {
-        //Get all products based on user entry in the current timestep
-        for (std::string const& p : data.getProducts(product)) {
 
-            //Get the entries that match in the CSVfile
-            entries = data.getData(type, p, currentTime);
-            //Add all the bids/ask in the entries
-            total += utils.totPrice(entries);
-        }
-        //Get the next timeframe
-        currentTime = data.getNextTimeStep(currentTime);
-       
-    }
-    
     //If the entry is empty, it means the product wasn't found
     if (entries.size() == 0) {
                std::cout << "advisorbot> Product not found!" << std::endl;

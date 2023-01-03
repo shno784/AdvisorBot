@@ -106,7 +106,18 @@ std::string CSVQuery::getPrevTimeStep(std::string& time) {
 	std::string prev_timestamp = "";
 
 	//Get the previous time
-	for (auto it = data.timestepVec.rbegin(); it != data.timestepVec.rend(); ++it) {
-		std::cout << *it << std::endl;
+	for (auto d = data.timestepVec.rbegin(); d != data.timestepVec.rend(); ++d) {
+		if (*d < time) {
+			prev_timestamp = *d;
+			break;
+		}
 	}
+
+	//go back to the first time if we have reached the last timestamp
+	if (prev_timestamp == "") {
+
+		prev_timestamp = data.timestepVec[0];
+
+	}
+	return prev_timestamp;
 };
